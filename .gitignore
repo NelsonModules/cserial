@@ -1,0 +1,16 @@
+*.dll
+*.dll.manifest
+*.exp
+*.lib
+cleaner.nls
+CMakeCache.txt
+CMakeFiles
+CMakeLists.txt
+cmake_install.cmake
+Makefile
+unloader.nls
+loader.nls
+mexFunctionsList.json
+mexGateway.c
+*.mex
+*.mexw64

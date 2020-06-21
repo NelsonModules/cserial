@@ -24,34 +24,116 @@ static c_serial_port_t* m_port = NULL;
 //=============================================================================
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-    int status;
+    int status = 0;
+
     char portName[255];
-    double *baudRate = NULL;
+    double *baudRatePtr = NULL;
+    double *dataBitsPtr = NULL;
+    double *stopBitsPtr = NULL;
+    char parityAsCharacter[255];
+    char flowControlAsCharacter[255];
+
+    int baudRate = CSERIAL_BAUD_9600;
+    int dataBits = CSERIAL_BITS_8;
+    int stopBits = CSERIAL_STOP_BITS_1;
+    int parity = CSERIAL_PARITY_NONE;
+    int flowControl = CSERIAL_FLOW_NONE;
+
+
     mxArray *out = NULL;
-    if (nrhs != 2) {
-        mexErrMsgIdAndTxt("cserial:nrhs", "Wrong numbers of input arguments.");
+    if (nrhs < 2 || nrhs > 5) {
+        mexErrMsgTxt("Wrong numbers of input arguments.");
     }
     if (nlhs > 1) {
-        mexErrMsgIdAndTxt("cserial:nlhs", "Wrong numbers of output arguments.");
+        mexErrMsgTxt("Wrong numbers of output arguments.");
     }
 
     mxGetString(prhs[0], portName, sizeof(portName));
-    baudRate = mxGetPr(prhs[1]);
+    baudRatePtr = mxGetPr(prhs[1]);
+    baudRate = (int)baudRatePtr[0];
+
+
+    if (nrhs > 2) {
+        dataBitsPtr = mxGetPr(prhs[2]);
+        dataBits = (int)dataBitsPtr[0];
+        switch (dataBits){
+            case CSERIAL_BAUD_0:
+            case CSERIAL_BAUD_50:
+            case CSERIAL_BAUD_100:
+            case CSERIAL_BAUD_110:
+            case CSERIAL_BAUD_134:
+            case CSERIAL_BAUD_150:
+            case CSERIAL_BAUD_200:
+            case CSERIAL_BAUD_300:
+            case CSERIAL_BAUD_600:
+            case CSERIAL_BAUD_1200:
+            case CSERIAL_BAUD_1800:
+            case CSERIAL_BAUD_2400:
+            case CSERIAL_BAUD_4800:
+            case CSERIAL_BAUD_9600:
+            case CSERIAL_BAUD_19200:
+            case CSERIAL_BAUD_38400:
+            case CSERIAL_BAUD_115200:
+            case CSERIAL_BAUD_921600: {
+            } break;
+            default:{
+                mexErrMsgTxt("Unsupported baud rate value.");
+            } break;
+        }
+    } 
+
+    if (nrhs > 3) {
+        stopBitsPtr = mxGetPr(prhs[3]);
+        stopBits = (int)stopBitsPtr[0];
+        if (stopBits != 1 || stopBits != 2) {
+            mexErrMsgTxt("Invalid stop bit value. 1 or 2 expected.");
+        }
+    }
+
+    if (nrhs > 4) {
+        mxGetString(prhs[4], parityAsCharacter, sizeof(parityAsCharacter));
+        if (strcmp(parityAsCharacter, 'none') == 0) {
+            parity = CSERIAL_PARITY_NONE;
+        } else if (strcmp(parityAsCharacter, 'odd') == 0) {
+            parity = CSERIAL_PARITY_ODD;
+        } else if (strcmp(parityAsCharacter, 'even') == 0) {
+            parity = CSERIAL_PARITY_EVEN;
+        } else {
+            mexErrMsgTxt("Invalid parity value. 'none', 'odd', or 'even' expected.");    
+        }
+    }
+
+    if (nrhs > 5) {
+        mxGetString(prhs[5], flowControlAsCharacter, sizeof(flowControlAsCharacter));
+        if (strcmp(flowControlAsCharacter, 'none') == 0) {
+            parity = CSERIAL_FLOW_NONE;
+        } else if (strcmp(flowControlAsCharacter, 'hard') == 0) {
+            parity = CSERIAL_FLOW_HARDWARE;
+        } else if (strcmp(flowControlAsCharacter, 'soft') == 0) {
+            parity = CSERIAL_FLOW_SOFTWARE;
+        } else {
+            mexErrMsgTxt("Invalid flow control value. 'none', 'hard', or 'soft' expected.");    
+        }
+    }
+
     if (c_serial_new( &m_port, NULL ) < 0) {
         mexErrMsgTxt("Unable to create new serial port.");
     }
     if (c_serial_set_port_name( m_port, (const char*) portName ) < 0) {
         mexErrMsgTxt("Cannot set port name.");
     }
-    c_serial_set_baud_rate( m_port,((int)  baudRate[0]));
-    c_serial_set_data_bits( m_port, CSERIAL_BITS_8 );
-    c_serial_set_stop_bits( m_port, CSERIAL_STOP_BITS_1 );
-    c_serial_set_parity( m_port, CSERIAL_PARITY_NONE );
-    c_serial_set_flow_control( m_port, CSERIAL_FLOW_NONE );
-    status = c_serial_open( m_port );
+
+    c_serial_set_baud_rate( m_port, baudRate);
+    c_serial_set_data_bits( m_port, dataBits );
+    c_serial_set_stop_bits( m_port, stopBits);
+    c_serial_set_parity(m_port, parity );
+    c_serial_set_flow_control(m_port, flowControl);
+    status = c_serial_open(m_port);
+    
     if (status < 0) {
         mexErrMsgTxt("Cannot open serial port.");
     }
+   addPortPtr((uint64_t)(m_port));
     out = mxCreateNumericMatrix(1, 1, mxUINT64_CLASS, mxREAL);
     *((uint64_t *)mxGetData(out)) = (uint64_t)(m_port);
     plhs[0] = out;

@@ -18,18 +18,27 @@
 #include <mex.h>
 #include <matrix.h>
 #include <stdint.h>
-#include "c_serial.h"
+#include <c_serial.h>
+#include "portHelpers.h"
 //=============================================================================
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-    c_serial_port_t* m_port;
+    c_serial_port_t* m_port = NULL;
     if (nrhs != 1) {
-        mexErrMsgIdAndTxt("cserial:arrayProduct:nrhs","Please send serial port object.");
+        mexErrMsgTxt("Wrong numbers of input arguments.");
     }
     if (nlhs > 0) {
-        mexErrMsgIdAndTxt("cserial:arrayProduct:nlhs", "");
+        mexErrMsgTxt("Wrong numbers of output arguments.");
     }
-    m_port = (c_serial_port_t*)(*((uint64_t *)mxGetData(prhs[0])));
-    c_serial_free(m_port);
+    uint64_t *ptrID = (uint64_t*)mxGetData(prhs[0]);
+    if (isValidPortPtr(ptrID[0])) {
+        m_port = (c_serial_port_t*)(ptrID[0]);
+        if (c_serial_is_open(m_port)) {
+            c_serial_free(m_port);
+        }
+        removePortPtr(ptrID[0]);
+    } else {
+        mexErrMsgTxt("A valid ID serial port expected.");
+    }
 }
 //=============================================================================

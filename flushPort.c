@@ -14,47 +14,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //=============================================================================
+#include <math.h>
 #include <mex.h>
 #include <matrix.h>
-#include <c_serial.h>
-#include <math.h>
 #include <stdint.h>
+#include <c_serial.h>
 #include "portHelpers.h"
 //=============================================================================
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
     c_serial_port_t* m_port = NULL;
-    int status = 0;
-    int bytes_read = 0;
-    int data_length = 0;
-    uint8_t *data = NULL;
-    mwSize total_num_of_elements = 0;
-    mwSize index = 0;
     uint64_t *ptrID = NULL; 
 
-    if (nrhs != 2) {
-        mexErrMsgTxt("Please send serial port object and msg.");
+    if (nrhs != 1) {
+        mexErrMsgTxt("Wrong numbers of input arguments.");
     }
-    if (nlhs != 0) {
-        mexErrMsgTxt("No outputs here.");
+    if (nlhs > 0) {
+        mexErrMsgTxt("Wrong numbers of output arguments.");
     }
-    if (mxGetClassID(prhs[1]) != mxUINT8_CLASS) {
-        mexErrMsgTxt("Write data is not a vector of uint8 numbers, please convert.");
-    }
-    data = (uint8_t *)mxGetData(prhs[1]);
-    data_length = (int)mxGetNumberOfElements(prhs[1]);
-    ptrID = (uint64_t*)mxGetData(prhs[0]);
+    ptrID = (uint64_t *)mxGetData(prhs[0]);
     if (!isValidPortPtr(ptrID[0])) {
         mexErrMsgTxt("A valid ID serial port expected.");
     }
     m_port = (c_serial_port_t*)(ptrID[0]);
-
     if (c_serial_is_open(m_port) == 0) {
         mexErrMsgTxt("Port is not open.");
     }
-    status = c_serial_write_data( m_port, data, &data_length );
-    if( status < 0 ) {
-        mexErrMsgTxt("Cannot write data.");
-    }
+    c_serial_flush(m_port);
 }
 //=============================================================================

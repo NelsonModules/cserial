@@ -24,21 +24,20 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
     const char** allPortList = NULL;
     int i = 0;
-    int n = 0;   
+    mwSize ndims = 2;
+    mwSize dims[] = {1, 0};     
+
     if (nrhs != 0) {
-        mexErrMsgIdAndTxt("cserial:nrhs", "Wrong numbers of input arguments.");
+        mexErrMsgTxt("Wrong numbers of input arguments.");
     }
     allPortList = c_serial_get_serial_ports_list();
     while (allPortList[i] != NULL) {
         i++;        
     }
-    n = i;
-    for (int k = 0; k < nlhs; ++k) {
-        if (k < n ){
-            plhs[k] = mxCreateString(allPortList[k]);
-        } else {
-            plhs[k] = mxCreateString("NO PORT.");
-        }
+    dims[1] = (mwSize)i;
+    plhs[0] = mxCreateCellArray(ndims, dims);
+    for (mwSize k = 0; k < dims[1]; ++k) {
+        mxSetCell(plhs[0], k, mxCreateString(allPortList[k]));
     }
     c_serial_free_serial_ports_list(allPortList);   
 }

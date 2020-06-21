@@ -19,11 +19,11 @@
 #include <matrix.h>
 #include <stdint.h>
 #include <c_serial.h>
-//=============================================================================
-static c_serial_port_t* m_port;
+#include "portHelpers.h"
 //=============================================================================
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
+    c_serial_port_t* m_port = NULL;
     int status = 0;
     uint8_t *msgData = NULL;               /* output  vector */
     double *bytesLeft = NULL;               /* output  vector */
@@ -32,20 +32,29 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     int data_length = 0;
     int bytes_remaining = 0;
     uint8_t data[255];
+    uint64_t *ptrID = NULL; 
 
     if(nrhs!=2) {
-        mexErrMsgIdAndTxt("cserial:arrayProduct:nrhs","Please send serial port object and number of bytes to read.");
+        mexErrMsgTxt("Wrong numbers of input arguments.");
     }
-    if(nlhs!=1 && nlhs!=2) {
-        mexErrMsgIdAndTxt("cserial:arrayProduct:nlhs","Serial data output required (optional bytes remaining).");
+    if(nlhs != 1 && nlhs != 2) {
+        mexErrMsgTxt("Wrong numbers of output arguments.");
     }
     numBytesToRead = mxGetPr(prhs[1]);
-    m_port = (c_serial_port_t*)(*((uint64_t *)mxGetData(prhs[0])));
+
+    ptrID = (uint64_t *)mxGetData(prhs[0]);
+    if (!isValidPortPtr(ptrID[0])) {
+        mexErrMsgTxt("A valid ID serial port expected.");
+    }
+    m_port = (c_serial_port_t*)(ptrID[0]);
+    if (c_serial_is_open(m_port) == 0) {
+        mexErrMsgTxt("Port is not open.");
+    }
     data_length = (int) numBytesToRead[0];
  
     status = c_serial_read_data( m_port, data, &data_length, &bytes_remaining,  NULL);
     if( status < 0 ) {
-        mexPrintf( "Read Failed");
+        mexErrMsgTxt("Cannot read data.");
     }
     plhs[0] = mxCreateNumericMatrix(1,(mwSize)data_length,mxUINT8_CLASS,mxREAL);
     msgData = (uint8_t *) mxGetData(plhs[0]);

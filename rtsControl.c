@@ -14,6 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //=============================================================================
+#include <string.h>
 #include <math.h>
 #include <mex.h>
 #include <matrix.h>
@@ -24,24 +25,16 @@
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
     c_serial_port_t* m_port = NULL;
-    int status = 0;
-    mxUint8 *msgData = NULL;
-    double *bytesLeft = NULL;
-    double *numBytesToRead = NULL;
-    numBytesToRead = mxGetPr(prhs[1]);
-    int data_length = 0;
-    int bytes_remaining = 0;
-    mxUint8 data[255];
-    mxUint64 *ptrID = NULL; 
-
-    if(nrhs!=2) {
+    char rtsControlAsCharacter[255];
+    int rtsControl = CSERIAL_RTS_NONE;
+    int res = 0;
+    mxUint64 *ptrID = NULL;
+    if (nrhs != 2) {
         mexErrMsgTxt("Wrong numbers of input arguments.");
     }
-    if(nlhs != 1 && nlhs != 2) {
+    if (nlhs > 1) {
         mexErrMsgTxt("Wrong numbers of output arguments.");
     }
-    numBytesToRead = mxGetPr(prhs[1]);
-
     ptrID = (mxUint64 *)mxGetData(prhs[0]);
     if (!isValidPortPtr(ptrID[0])) {
         mexErrMsgTxt("A valid ID serial port expected.");
@@ -50,21 +43,19 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (c_serial_is_open(m_port) == 0) {
         mexErrMsgTxt("Port is not open.");
     }
-    data_length = (int) numBytesToRead[0];
- 
-    status = c_serial_read_data( m_port, data, &data_length, &bytes_remaining,  NULL);
-    if( status < 0 ) {
-        mexErrMsgTxt("Cannot read data.");
+    mxGetString(prhs[1], rtsControlAsCharacter, sizeof(rtsControlAsCharacter));
+    if (strcmp(rtsControlAsCharacter, "none") == 0) {
+        rtsControl = CSERIAL_RTS_NONE;
+    } else if (strcmp(rtsControlAsCharacter, "hard") == 0) {
+        rtsControl = CSERIAL_RTS_HARDWARE;
+    } else if (strcmp(rtsControlAsCharacter, "soft") == 0) {
+        rtsControl = CSERIAL_RTS_SOFTWARE;
+    } else if (strcmp(rtsControlAsCharacter, "best") == 0) {
+        rtsControl = CSERIAL_RTS_BEST_AVAILABLE;
+    } else {
+        mexErrMsgTxt("Invalid RTS control value. 'none', 'hard', 'soft' or 'best' expected.");    
     }
-    plhs[0] = mxCreateNumericMatrix(1,(mwSize)data_length,mxUINT8_CLASS,mxREAL);
-    msgData = (mxUint8 *) mxGetData(plhs[0]);
-    for (int j = 0; j < data_length; j++){
-        msgData[j] = data[j];
-    }
-    if ( nlhs == 2 ) {
-        plhs[1] = mxCreateDoubleMatrix(1,1,mxREAL);
-        bytesLeft = mxGetPr(plhs[1]);
-	    bytesLeft[0] = (double) bytes_remaining;
-    }
+    res = c_serial_set_rts_control(m_port, rtsControl);
+    plhs[0] = mxCreateLogicalScalar(res);
 }
 //=============================================================================

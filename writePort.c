@@ -27,23 +27,26 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     int status = 0;
     int bytes_read = 0;
     int data_length = 0;
-    uint8_t *data = NULL;
+    mxUint8 *data = NULL;
     mwSize total_num_of_elements = 0;
     mwSize index = 0;
-    uint64_t *ptrID = NULL; 
-
+    mxUint64 *ptrID = NULL; 
+    bool isSupportedType = false;
+    bool isVector = false;
     if (nrhs != 2) {
         mexErrMsgTxt("Please send serial port object and msg.");
     }
     if (nlhs != 0) {
         mexErrMsgTxt("No outputs here.");
     }
-    if (mxGetClassID(prhs[1]) != mxUINT8_CLASS) {
+    isSupportedType = mxGetClassID(prhs[1]) == mxUINT8_CLASS;
+    isVector = mxGetM(prhs[1]) == 1 || mxGetN(prhs[1]) == 1;
+    if (!isSupportedType || mxGetNumberOfDimensions(prhs[1]) != 2 || !isVector) {
         mexErrMsgTxt("Write data is not a vector of uint8 numbers, please convert.");
     }
-    data = (uint8_t *)mxGetData(prhs[1]);
+    data = (mxUint8 *)mxGetData(prhs[1]);
     data_length = (int)mxGetNumberOfElements(prhs[1]);
-    ptrID = (uint64_t*)mxGetData(prhs[0]);
+    ptrID = (mxUint64*)mxGetData(prhs[0]);
     if (!isValidPortPtr(ptrID[0])) {
         mexErrMsgTxt("A valid ID serial port expected.");
     }

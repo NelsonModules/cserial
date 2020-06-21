@@ -14,11 +14,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //=============================================================================
+#include <string.h>
 #include <math.h>
 #include <mex.h>
 #include <matrix.h>
 #include <stdint.h>
 #include <c_serial.h>
+#include "portHelpers.h"
 //=============================================================================
 static c_serial_port_t* m_port = NULL;
 //=============================================================================
@@ -38,7 +40,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     int stopBits = CSERIAL_STOP_BITS_1;
     int parity = CSERIAL_PARITY_NONE;
     int flowControl = CSERIAL_FLOW_NONE;
-
 
     mxArray *out = NULL;
     if (nrhs < 2 || nrhs > 5) {
@@ -85,18 +86,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (nrhs > 3) {
         stopBitsPtr = mxGetPr(prhs[3]);
         stopBits = (int)stopBitsPtr[0];
-        if (stopBits != 1 || stopBits != 2) {
+        if (stopBits < 0 || stopBits > 2) {
             mexErrMsgTxt("Invalid stop bit value. 1 or 2 expected.");
         }
     }
 
     if (nrhs > 4) {
         mxGetString(prhs[4], parityAsCharacter, sizeof(parityAsCharacter));
-        if (strcmp(parityAsCharacter, 'none') == 0) {
+        if (strcmp(parityAsCharacter, "none") == 0) {
             parity = CSERIAL_PARITY_NONE;
-        } else if (strcmp(parityAsCharacter, 'odd') == 0) {
+        } else if (strcmp(parityAsCharacter, "odd") == 0) {
             parity = CSERIAL_PARITY_ODD;
-        } else if (strcmp(parityAsCharacter, 'even') == 0) {
+        } else if (strcmp(parityAsCharacter, "even") == 0) {
             parity = CSERIAL_PARITY_EVEN;
         } else {
             mexErrMsgTxt("Invalid parity value. 'none', 'odd', or 'even' expected.");    
@@ -105,11 +106,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
     if (nrhs > 5) {
         mxGetString(prhs[5], flowControlAsCharacter, sizeof(flowControlAsCharacter));
-        if (strcmp(flowControlAsCharacter, 'none') == 0) {
+        if (strcmp(flowControlAsCharacter, "none") == 0) {
             parity = CSERIAL_FLOW_NONE;
-        } else if (strcmp(flowControlAsCharacter, 'hard') == 0) {
+        } else if (strcmp(flowControlAsCharacter, "hard") == 0) {
             parity = CSERIAL_FLOW_HARDWARE;
-        } else if (strcmp(flowControlAsCharacter, 'soft') == 0) {
+        } else if (strcmp(flowControlAsCharacter, "soft") == 0) {
             parity = CSERIAL_FLOW_SOFTWARE;
         } else {
             mexErrMsgTxt("Invalid flow control value. 'none', 'hard', or 'soft' expected.");    
@@ -133,9 +134,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (status < 0) {
         mexErrMsgTxt("Cannot open serial port.");
     }
-   addPortPtr((uint64_t)(m_port));
+   addPortPtr((mxUint64)(m_port));
     out = mxCreateNumericMatrix(1, 1, mxUINT64_CLASS, mxREAL);
-    *((uint64_t *)mxGetData(out)) = (uint64_t)(m_port);
+    *((mxUint64 *)mxGetData(out)) = (mxUint64)(m_port);
     plhs[0] = out;
 }
 //=============================================================================

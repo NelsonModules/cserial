@@ -18,12 +18,12 @@
 #include <mex.h>
 #include <matrix.h>
 //=============================================================================
-bool isValidPortPtr(uint64_t id) {
+bool isValidPortPtr(mxUint64 id) {
     mxArray *mxGlobalPorts = mexGetVariable("global", "CSERIAL_OPENED_PORTS");
     if (mxGlobalPorts != NULL) {
         if (!mxIsEmpty(mxGlobalPorts)) {
             size_t nbValues = mxGetNumberOfElements(mxGlobalPorts);
-            uint64_t *values = mxGetData(mxGlobalPorts);
+            mxUint64 *values = mxGetData(mxGlobalPorts);
             for (size_t k = 0; k < nbValues; ++k) {
                 if (values[k] == id) {
                     return true;
@@ -34,33 +34,33 @@ bool isValidPortPtr(uint64_t id) {
     return false;
 }
 //=============================================================================
-bool addPortPtr(uint64_t id) {
+bool addPortPtr(mxUint64 id) {
     mxArray *mxGlobalPorts = mexGetVariable("global", "CSERIAL_OPENED_PORTS");
     if (mxGlobalPorts == NULL) {
          mxArray *mxNewGlobalPorts = mxCreateNumericMatrix(1, 1, mxUINT64_CLASS, mxREAL);
-        *((uint64_t *)mxGetData(mxNewGlobalPorts)) = id;        
+        *((mxUint64 *)mxGetData(mxNewGlobalPorts)) = id;        
         mexPutVariable("global", "CSERIAL_OPENED_PORTS", mxNewGlobalPorts);
         return true;
     } else {
         if (mxIsEmpty(mxGlobalPorts)) {
             mxArray *mxNewGlobalPorts = mxCreateNumericMatrix(1, 1, mxUINT64_CLASS, mxREAL);
-            *((uint64_t *)mxGetData(mxNewGlobalPorts)) = id;        
+            *((mxUint64 *)mxGetData(mxNewGlobalPorts)) = id;        
             mexPutVariable("global", "CSERIAL_OPENED_PORTS", mxNewGlobalPorts);
             mxDestroyArray(mxGlobalPorts);
             return true;
         } else {
             size_t nbValues = mxGetNumberOfElements(mxGlobalPorts);
-            uint64_t *values = mxGetData(mxGlobalPorts);
+            mxUint64 *values = mxGetData(mxGlobalPorts);
             mwSize ndim = 2;
             mwSize dims[2] = {1, 0};
             dims[1] = nbValues + 1;
             mxArray *mxNewGlobalPorts = mxCreateNumericArray(
             ndim, dims, mxUINT64_CLASS, mxREAL);
-            uint64_t *newValues = mxGetData(mxNewGlobalPorts);
+            mxUint64 *newValues = mxGetData(mxNewGlobalPorts);
             for (size_t k = 0; k < nbValues; ++k){
                 newValues[k] = values[k]; 
             }
-            newValues[nbValues] = (uint64_t)id;
+            newValues[nbValues] = (mxUint64)id;
             mexPutVariable("global", "CSERIAL_OPENED_PORTS", mxNewGlobalPorts);
             mxDestroyArray(mxGlobalPorts);
             return true;
@@ -69,18 +69,18 @@ bool addPortPtr(uint64_t id) {
     return false;
 }
 //=============================================================================
-bool removePortPtr(uint64_t id) {
+bool removePortPtr(mxUint64 id) {
     mxArray *mxGlobalPorts = mexGetVariable("global", "CSERIAL_OPENED_PORTS");
     if (mxGlobalPorts != NULL) {
         if (isValidPortPtr(id)) {
             size_t nbValues = mxGetNumberOfElements(mxGlobalPorts);
-            uint64_t *values = mxGetData(mxGlobalPorts);
+            mxUint64 *values = mxGetData(mxGlobalPorts);
             mwSize ndim = 2;
             mwSize dims[2] = {1, 0};
             dims[1] = nbValues - 1;
             mxArray *mxNewGlobalPorts = mxCreateNumericArray(
             ndim, dims, mxUINT64_CLASS, mxREAL);
-            uint64_t *newValues = mxGetData(mxNewGlobalPorts);
+            mxUint64 *newValues = mxGetData(mxNewGlobalPorts);
             size_t l = 0;
             for (size_t k = 0; k < nbValues; ++k) {
                 if (values[k] != id) {

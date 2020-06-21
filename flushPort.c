@@ -24,7 +24,7 @@
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
     c_serial_port_t* m_port = NULL;
-    uint64_t *ptrID = NULL; 
+    mxUint64 *ptrID = NULL; 
 
     if (nrhs != 1) {
         mexErrMsgTxt("Wrong numbers of input arguments.");
@@ -32,7 +32,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (nlhs > 0) {
         mexErrMsgTxt("Wrong numbers of output arguments.");
     }
-    ptrID = (uint64_t *)mxGetData(prhs[0]);
+    ptrID = (mxUint64 *)mxGetData(prhs[0]);
     if (!isValidPortPtr(ptrID[0])) {
         mexErrMsgTxt("A valid ID serial port expected.");
     }

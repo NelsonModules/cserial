@@ -1,8 +1,9 @@
-mex('getPortNames.c', 'c_serial.c', ['-I ', pwd()]);
-mex('openPort.c', 'c_serial.c', ['-I ', pwd()]);
-mex('writePort.c', 'c_serial.c', ['-I ', pwd()]);
-mex('readPort.c', 'c_serial.c', ['-I ', pwd()]);
-mex('closePort.c', 'c_serial.c', ['-I ', pwd()]);
-mex('flushPort.c', 'c_serial.c', ['-I ', pwd()]);
+mex('getPortNames.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
+mex('openPort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
+mex('writePort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
+mex('readPort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
+mex('closePort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
+mex('flushPort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
+mex('rtsControl.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
 
 run('loader.nls');

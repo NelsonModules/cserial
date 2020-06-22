@@ -34,15 +34,17 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     double *stopBitsPtr = NULL;
     char parityAsCharacter[255];
     char flowControlAsCharacter[255];
+    char rtsControlAsCharacter[255];
 
     int baudRate = CSERIAL_BAUD_9600;
     int dataBits = CSERIAL_BITS_8;
     int stopBits = CSERIAL_STOP_BITS_1;
     int parity = CSERIAL_PARITY_NONE;
     int flowControl = CSERIAL_FLOW_NONE;
+    int rtsControl = CSERIAL_RTS_NONE;
 
     mxArray *out = NULL;
-    if (nrhs < 2 || nrhs > 5) {
+    if (nrhs < 2 || nrhs > 6) {
         mexErrMsgTxt("Wrong numbers of input arguments.");
     }
     if (nlhs > 1) {
@@ -52,30 +54,40 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     mxGetString(prhs[0], portName, sizeof(portName));
     baudRatePtr = mxGetPr(prhs[1]);
     baudRate = (int)baudRatePtr[0];
+    switch (baudRate) {
+        case CSERIAL_BAUD_0:
+        case CSERIAL_BAUD_50:
+        case CSERIAL_BAUD_100:
+        case CSERIAL_BAUD_110:
+        case CSERIAL_BAUD_134:
+        case CSERIAL_BAUD_150:
+        case CSERIAL_BAUD_200:
+        case CSERIAL_BAUD_300:
+        case CSERIAL_BAUD_600:
+        case CSERIAL_BAUD_1200:
+        case CSERIAL_BAUD_1800:
+        case CSERIAL_BAUD_2400:
+        case CSERIAL_BAUD_4800:
+        case CSERIAL_BAUD_9600:
+        case CSERIAL_BAUD_19200:
+        case CSERIAL_BAUD_38400:
+        case CSERIAL_BAUD_115200:
+        case CSERIAL_BAUD_921600: {
+        } break;
+        default:{
+            mexErrMsgTxt("Unsupported baud rate value.");
+        } break;
+    }
 
 
     if (nrhs > 2) {
         dataBitsPtr = mxGetPr(prhs[2]);
         dataBits = (int)dataBitsPtr[0];
-        switch (dataBits){
-            case CSERIAL_BAUD_0:
-            case CSERIAL_BAUD_50:
-            case CSERIAL_BAUD_100:
-            case CSERIAL_BAUD_110:
-            case CSERIAL_BAUD_134:
-            case CSERIAL_BAUD_150:
-            case CSERIAL_BAUD_200:
-            case CSERIAL_BAUD_300:
-            case CSERIAL_BAUD_600:
-            case CSERIAL_BAUD_1200:
-            case CSERIAL_BAUD_1800:
-            case CSERIAL_BAUD_2400:
-            case CSERIAL_BAUD_4800:
-            case CSERIAL_BAUD_9600:
-            case CSERIAL_BAUD_19200:
-            case CSERIAL_BAUD_38400:
-            case CSERIAL_BAUD_115200:
-            case CSERIAL_BAUD_921600: {
+        switch (dataBits) {
+            case CSERIAL_BITS_5:
+            case CSERIAL_BITS_6:
+            case CSERIAL_BITS_7:
+            case CSERIAL_BITS_8: {
             } break;
             default:{
                 mexErrMsgTxt("Unsupported baud rate value.");
@@ -117,6 +129,21 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
     }
 
+    if (nrhs > 6) {
+        mxGetString(prhs[6], rtsControlAsCharacter, sizeof(rtsControlAsCharacter));
+        if (strcmp(rtsControlAsCharacter, "none") == 0) {
+            rtsControl = CSERIAL_RTS_NONE;
+        } else if (strcmp(rtsControlAsCharacter, "hard") == 0) {
+            rtsControl = CSERIAL_RTS_HARDWARE;
+        } else if (strcmp(rtsControlAsCharacter, "soft") == 0) {
+            rtsControl = CSERIAL_RTS_SOFTWARE;
+        } else if (strcmp(rtsControlAsCharacter, "best") == 0) {
+            rtsControl = CSERIAL_RTS_BEST_AVAILABLE;
+        } else {
+            mexErrMsgTxt("Invalid RTS control value. 'none', 'hard', 'soft' or 'best' expected.");    
+        }
+    }
+
     if (c_serial_new( &m_port, NULL ) < 0) {
         mexErrMsgTxt("Unable to create new serial port.");
     }
@@ -129,6 +156,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     c_serial_set_stop_bits( m_port, stopBits);
     c_serial_set_parity(m_port, parity );
     c_serial_set_flow_control(m_port, flowControl);
+    c_serial_set_rts_control(m_port, rtsControl);
+
     status = c_serial_open(m_port);
     
     if (status < 0) {

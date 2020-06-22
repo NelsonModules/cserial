@@ -132,11 +132,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (nrhs > 5) {
         mxGetString(prhs[5], flowControlAsCharacter, sizeof(flowControlAsCharacter));
         if (strcmp(flowControlAsCharacter, "none") == 0) {
-            parity = CSERIAL_FLOW_NONE;
+            flowControl = CSERIAL_FLOW_NONE;
         } else if (strcmp(flowControlAsCharacter, "hard") == 0) {
-            parity = CSERIAL_FLOW_HARDWARE;
+            flowControl = CSERIAL_FLOW_HARDWARE;
         } else if (strcmp(flowControlAsCharacter, "soft") == 0) {
-            parity = CSERIAL_FLOW_SOFTWARE;
+            flowControl = CSERIAL_FLOW_SOFTWARE;
         } else {
             mexErrMsgTxt("Invalid flow control value. 'none', 'hard', or 'soft' expected.");    
         }

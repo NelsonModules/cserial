@@ -33,6 +33,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     int bytes_remaining = 0;
     mxUint8 data[255];
     mxUint64 *ptrID = NULL; 
+    bool isSupported = false;
 
     if(nrhs!=2) {
         mexErrMsgTxt("Wrong numbers of input arguments.");
@@ -42,6 +43,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
     numBytesToRead = mxGetPr(prhs[1]);
 
+    isSupported = mxIsScalar(prhs[0]) && mxGetClassID(prhs[0]) == mxUINT64_CLASS;
+    if (!isSupported){
+        mexErrMsgTxt("A valid scalar uint64 ID serial port expected.");
+    }
     ptrID = (mxUint64 *)mxGetData(prhs[0]);
     if (!isValidPortPtr(ptrID[0])) {
         mexErrMsgTxt("A valid ID serial port expected.");

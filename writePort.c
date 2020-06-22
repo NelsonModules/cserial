@@ -33,6 +33,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     mxUint64 *ptrID = NULL; 
     bool isSupportedType = false;
     bool isVector = false;
+    bool isSupportedID = false;
+
     if (nrhs != 2) {
         mexErrMsgTxt("Please send serial port object and msg.");
     }
@@ -47,6 +49,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     data = (mxUint8 *)mxGetData(prhs[1]);
     data_length = (int)mxGetNumberOfElements(prhs[1]);
     ptrID = (mxUint64*)mxGetData(prhs[0]);
+    isSupportedID = mxIsScalar(prhs[0]) && mxGetClassID(prhs[0]) == mxUINT64_CLASS;
+    if (!isSupportedID){
+        mexErrMsgTxt("A valid scalar uint64 ID serial port expected.");
+    }
     if (!isValidPortPtr(ptrID[0])) {
         mexErrMsgTxt("A valid ID serial port expected.");
     }

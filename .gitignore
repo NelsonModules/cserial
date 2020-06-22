@@ -2,6 +2,8 @@
 *.dll.manifest
 *.exp
 *.lib
+*.pdb
+*.ilk
 cleaner.nls
 CMakeCache.txt
 CMakeFiles

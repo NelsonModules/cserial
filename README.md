@@ -28,6 +28,7 @@ Builtin availables:
 * writePort(id, data) write date on serial port. data must be uint8 or char.
 * closePort(id) closes an port opened.
 * flushPort(id) flushs desired port.
+* st = getPortConfig(id) returns struct with port informations.
 
 
 Example: https://github.com/NelsonModules/cserial/blob/master/example.m

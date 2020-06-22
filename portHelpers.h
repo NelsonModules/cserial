@@ -18,8 +18,11 @@
 #include <mex.h>
 #include <matrix.h>
 //=============================================================================
+#define SCOPE_PORTS_LIST "global"
+#define VARIABLE_PORTS_NAME "CSERIAL_OPENED_PORTS"
+//=============================================================================
 bool isValidPortPtr(mxUint64 id) {
-    mxArray *mxGlobalPorts = mexGetVariable("global", "CSERIAL_OPENED_PORTS");
+    mxArray *mxGlobalPorts = mexGetVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME);
     if (mxGlobalPorts != NULL) {
         if (!mxIsEmpty(mxGlobalPorts)) {
             size_t nbValues = mxGetNumberOfElements(mxGlobalPorts);
@@ -35,17 +38,17 @@ bool isValidPortPtr(mxUint64 id) {
 }
 //=============================================================================
 bool addPortPtr(mxUint64 id) {
-    mxArray *mxGlobalPorts = mexGetVariable("global", "CSERIAL_OPENED_PORTS");
+    mxArray *mxGlobalPorts = mexGetVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME);
     if (mxGlobalPorts == NULL) {
          mxArray *mxNewGlobalPorts = mxCreateNumericMatrix(1, 1, mxUINT64_CLASS, mxREAL);
         *((mxUint64 *)mxGetData(mxNewGlobalPorts)) = id;        
-        mexPutVariable("global", "CSERIAL_OPENED_PORTS", mxNewGlobalPorts);
+        mexPutVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME, mxNewGlobalPorts);
         return true;
     } else {
         if (mxIsEmpty(mxGlobalPorts)) {
             mxArray *mxNewGlobalPorts = mxCreateNumericMatrix(1, 1, mxUINT64_CLASS, mxREAL);
             *((mxUint64 *)mxGetData(mxNewGlobalPorts)) = id;        
-            mexPutVariable("global", "CSERIAL_OPENED_PORTS", mxNewGlobalPorts);
+            mexPutVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME, mxNewGlobalPorts);
             mxDestroyArray(mxGlobalPorts);
             return true;
         } else {
@@ -61,7 +64,7 @@ bool addPortPtr(mxUint64 id) {
                 newValues[k] = values[k]; 
             }
             newValues[nbValues] = (mxUint64)id;
-            mexPutVariable("global", "CSERIAL_OPENED_PORTS", mxNewGlobalPorts);
+            mexPutVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME, mxNewGlobalPorts);
             mxDestroyArray(mxGlobalPorts);
             return true;
         }
@@ -69,8 +72,20 @@ bool addPortPtr(mxUint64 id) {
     return false;
 }
 //=============================================================================
+void removeAllPortPtr() {
+    mxArray *mxGlobalPorts = mexGetVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME);
+    if (mxGlobalPorts != NULL) {
+        mwSize ndim = 2;
+        mwSize dims[2] = {1, 0};
+        mxArray *mxNewGlobalPorts = mxCreateNumericArray(ndim, dims,
+            mxUINT64_CLASS, mxREAL);
+        mexPutVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME, mxNewGlobalPorts);  
+        mxDestroyArray(mxGlobalPorts);
+    }
+}
+//=============================================================================
 bool removePortPtr(mxUint64 id) {
-    mxArray *mxGlobalPorts = mexGetVariable("global", "CSERIAL_OPENED_PORTS");
+    mxArray *mxGlobalPorts = mexGetVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME);
     if (mxGlobalPorts != NULL) {
         if (isValidPortPtr(id)) {
             size_t nbValues = mxGetNumberOfElements(mxGlobalPorts);
@@ -88,10 +103,24 @@ bool removePortPtr(mxUint64 id) {
                     l++;  
                 }
             }
+            mexPutVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME, mxNewGlobalPorts);
             mxDestroyArray(mxGlobalPorts);
             return true;
         }
     }
     return false;
+}
+//=============================================================================
+mxUint64 * getOpenPorts(size_t *nbPorts) {
+    mxUint64 *portIds = NULL;
+    *nbPorts = 0;
+    mxArray *mxGlobalPorts = mexGetVariable(SCOPE_PORTS_LIST, VARIABLE_PORTS_NAME);
+    if (mxGlobalPorts != NULL) {
+        if (!mxIsEmpty(mxGlobalPorts)) {
+            *nbPorts = mxGetNumberOfElements(mxGlobalPorts);
+            portIds = mxGetData(mxGlobalPorts);
+        }
+    }
+    return portIds;
 }
 //=============================================================================

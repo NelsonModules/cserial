@@ -24,6 +24,19 @@
 //=============================================================================
 static c_serial_port_t* m_port = NULL;
 //=============================================================================
+static void closePortsAtExit(void)
+{
+    size_t nbPorts = 0;
+    mxUint64 * portsIds = getOpenPorts(&nbPorts);
+    for (size_t k = 0; k < nbPorts; ++k) {
+        m_port = (c_serial_port_t*)(portsIds[k]);
+        if (c_serial_is_open(m_port)) {
+            c_serial_free(m_port);
+        }
+    }
+    removeAllPortPtr();
+}
+//=============================================================================
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
     int status = 0;
@@ -167,5 +180,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     out = mxCreateNumericMatrix(1, 1, mxUINT64_CLASS, mxREAL);
     *((mxUint64 *)mxGetData(out)) = (mxUint64)(m_port);
     plhs[0] = out;
+    mexAtExit(closePortsAtExit);
 }
 //=============================================================================

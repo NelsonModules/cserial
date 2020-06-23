@@ -37,7 +37,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (!isSupported){
         mexErrMsgTxt("A valid scalar uint64 ID serial port expected.");
     }
-    *ptrID = (mxUint64*)mxGetData(prhs[0]);
+    ptrID = (mxUint64*)mxGetData(prhs[0]);
     if (isValidPortPtr(ptrID[0])) {
         m_port = (c_serial_port_t*)(ptrID[0]);
         if (c_serial_is_open(m_port)) {

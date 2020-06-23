@@ -103,7 +103,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
             case CSERIAL_BITS_8: {
             } break;
             default:{
-                mexErrMsgTxt("Unsupported baud rate value.");
+                mexErrMsgTxt("Unsupported data bits value.");
             } break;
         }
     } 

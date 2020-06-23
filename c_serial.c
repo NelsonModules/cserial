@@ -852,6 +852,14 @@ do{ \
                 {
                     GET_SERIAL_PORT_STRUCT( port, newio );
 #ifdef _WIN32
+                    if (newio.StopBits == 2) {
+                        port->stop_bits = 2;
+                        return 2;
+                    } else {
+                        port->stop_bits = 1;
+                        return 1;
+                    }
+
                     port->stop_bits = newio.StopBits;
                     if( newio.StopBits == 1 ) {
                         return 1;

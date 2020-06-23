@@ -164,6 +164,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         mexErrMsgTxt("Cannot set port name.");
     }
 
+    status = c_serial_open(m_port);
+    if (status < 0) {
+        mexErrMsgTxt("Cannot open serial port.");
+    }
+
     c_serial_set_baud_rate( m_port, baudRate);
     c_serial_set_data_bits( m_port, dataBits );
     c_serial_set_stop_bits( m_port, stopBits);
@@ -171,11 +176,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     c_serial_set_flow_control(m_port, flowControl);
     c_serial_set_rts_control(m_port, rtsControl);
 
-    status = c_serial_open(m_port);
     
-    if (status < 0) {
-        mexErrMsgTxt("Cannot open serial port.");
-    }
    addPortPtr((mxUint64)(m_port));
     out = mxCreateNumericMatrix(1, 1, mxUINT64_CLASS, mxREAL);
     *((mxUint64 *)mxGetData(out)) = (mxUint64)(m_port);

@@ -1,4 +1,4 @@
-% Example with  COM3, COM4 paired 
+% Example with two paired 
 
 % return a cell with available ports.
 ce = getPortNames() 
@@ -18,7 +18,7 @@ dataOut = uint8(string);
 % open port and data is a 1d vector of uint8 values to send out data
 writePort(writerPort, dataOut);
 
-% Try and read 50 bytes
+% Try and read N bytes
 numBytesToRead = length(dataOut);
 
 % This function will access the ports buffer and try to read the number of

@@ -1,0 +1,33 @@
+{
+    "module": "cserial",
+    "title": "cserial toolbox",
+    "summary": "Serial port C MEX functions",
+    "version": "1.0.0",
+    "platforms": "all",
+    "nelson": "<2.0.0",
+    "builtin": true,
+    "description": "Serial port C MEX functions",
+    "copyright": "Copyright © 2020-present Allan CORNET",
+    "author": {
+      "name": "Allan CORNET",
+      "email": "nelson.numerical.computation@gmail.com",
+      "url": "https://nelson-numerical-software.github.io/nelson-website/"
+    },
+    "license": "APACHE V2.0",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/NelsonModules/cserial.git"
+    },
+    "keywords": [
+      "serial",
+      "port",
+      "communication",
+      "mex"
+    ],
+    "bugs": {
+      "url": "https://github.com/NelsonModules/cserial/issues"
+    },
+    "homepage": "https://github.com/NelsonModules/cserial",
+    "dependencies": {}
+  }
+  

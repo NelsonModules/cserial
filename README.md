@@ -5,12 +5,14 @@ To build:
 
 On Nelson:
 ```
-run('build.nls')
+run('builder.nls')
+run('loader.nls')
+help cserial
 ```
 
 On others tools:
 ```
-run('build.m')
+run('builder.m')
 ```
 
 Builtin availables:
@@ -31,9 +33,9 @@ Builtin availables:
 * st = getPortConfig(id) returns struct with port informations.
 
 
-Example: https://github.com/NelsonModules/cserial/blob/master/example.m
+Example: https://github.com/NelsonModules/cserial/blob/master/example/example.m
 
-This toolboxe is an example to show how it is easy to use existing C MEX builtin with Nelson.
-This toolbox works on Nelson and others tools fully compatible with C MEX API.
+This toolboxe is an good example to show how it is easy to use existing C MEX builtin with Nelson.
+This toolbox works on Nelson and all others tools fully compatible with C MEX API.
 
 Allan CORNET - 2020 

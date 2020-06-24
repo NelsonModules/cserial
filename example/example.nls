@@ -1,5 +1,4 @@
-// Example with  COM3, COM4 paired 
-run('loader.nls')
+// Example with two paired 
 
 // return a cell with available ports.
 ce = getPortNames() 

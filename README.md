@@ -3,7 +3,8 @@ https://github.com/rm5248/CSerial
 
 To build:
 
-On Nelson:
+On Nelson >= 0.4.6 :
+
 ```
 run('builder.nls')
 run('loader.nls')
@@ -11,6 +12,7 @@ help cserial
 ```
 
 On others tools:
+
 ```
 run('builder.m')
 ```

@@ -13,6 +13,7 @@
 %  See the License for the specific language governing permissions and
 %  limitations under the License.
 % =============================================================================
+cd('./builtin')
 mex('getPortNames.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
 mex('openPort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
 mex('writePort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
@@ -20,4 +21,5 @@ mex('readPort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
 mex('closePort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
 mex('flushPort.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
 mex('getPortConfig.c', 'c_serial.c', ['-I ', pwd()], '-DCSERIAL_STATIC');
+cd('..')
 % =============================================================================

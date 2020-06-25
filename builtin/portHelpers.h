@@ -16,7 +16,20 @@
 #pragma once
 //=============================================================================
 #include <mex.h>
-#include <matrix.h>
+//=============================================================================
+// Scilab have a too old C MEX compatibility ...
+#ifndef false
+#define false 0
+#endif
+#ifndef true
+#define true 1
+#endif
+#ifndef mxUint64
+typedef uint64_t mxUint64;
+#endif
+#ifndef mxUint8
+typedef uint8_t mxUint8;
+#endif
 //=============================================================================
 #define SCOPE_PORTS_LIST "global"
 #define VARIABLE_PORTS_NAME "CSERIAL_OPENED_PORTS"

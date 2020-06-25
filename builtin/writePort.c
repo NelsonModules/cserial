@@ -15,11 +15,10 @@
 // limitations under the License.
 //=============================================================================
 #include <mex.h>
-#include <matrix.h>
-#include <c_serial.h>
 #include <math.h>
 #include <stdint.h>
 #include "portHelpers.h"
+#include "c_serial.h"
 //=============================================================================
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {

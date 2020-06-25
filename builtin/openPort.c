@@ -17,9 +17,8 @@
 #include <string.h>
 #include <math.h>
 #include <mex.h>
-#include <matrix.h>
 #include <stdint.h>
-#include <c_serial.h>
+#include "c_serial.h"
 #include "portHelpers.h"
 //=============================================================================
 static c_serial_port_t* m_port = NULL;

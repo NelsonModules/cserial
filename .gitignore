@@ -4,6 +4,7 @@
 *.lib
 *.pdb
 *.ilk
+
 cleaner.nls
 CMakeCache.txt
 CMakeFiles
@@ -13,6 +14,23 @@ Makefile
 unloader.nls
 loader.nls
 mexFunctionsList.json
+
+# Matlab
 mexGateway.c
 *.mex
 *.mexw64
+
+# Scilab files
+builtin/Release
+builtin/Release/*.mak
+builtin/Makelib.mak
+builtin/mexsci*.hxx
+builtin/mexsci*.cpp
+builtin/mexsci*.h
+builtin/mexsci*.def
+builtin/cleaner.sce
+builtin/loader.sce
+unloader.sce
+loader.sce
+cleaner.sce
+

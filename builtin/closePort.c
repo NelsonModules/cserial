@@ -16,9 +16,8 @@
 //=============================================================================
 #include <math.h>
 #include <mex.h>
-#include <matrix.h>
 #include <stdint.h>
-#include <c_serial.h>
+#include "c_serial.h"
 #include "portHelpers.h"
 //=============================================================================
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])

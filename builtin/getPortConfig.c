@@ -16,9 +16,8 @@
 //=============================================================================
 #include <math.h>
 #include <mex.h>
-#include <matrix.h>
 #include <stdint.h>
-#include <c_serial.h>
+#include "c_serial.h"
 #include "portHelpers.h"
 //=============================================================================
 #define FIELDNAME_NAME "name"

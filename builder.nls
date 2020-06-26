@@ -29,7 +29,7 @@ run([fileparts(nfilename('fullpath')), '/builtin/builder.nls']);
 fprintf(_('Building ''%s'' loader.\n'), MODULE_NAME);
 nmm_build_loader(MODULE_NAME, fileparts(nfilename('fullpath')));
 //=============================================================================
-//nmm_build_help(MODULE_NAME, fileparts(nfilename('fullpath')));
+nmm_build_help(MODULE_NAME, fileparts(nfilename('fullpath')));
 //=============================================================================
 clear('MODULE_NAME');
 //=============================================================================

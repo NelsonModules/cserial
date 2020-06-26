@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmldoc>
+	<copyright>APACHE V2.0</copyright>
+	<language>en_US</language>
+	<module_name>cserial</module_name>
+	<chapter>cserial toolbox</chapter>
+	<chapter_description>C MEX interface for serial port.</chapter_description>
+</xmldoc>
+

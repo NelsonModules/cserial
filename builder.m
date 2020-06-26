@@ -13,8 +13,12 @@
 %  See the License for the specific language governing permissions and
 %  limitations under the License.
 % =============================================================================
-run('./builtin');
-pathToAdd = [pwd(), '/builtin'];
+this_dir = fileparts(mfilename('fullpath'));
+current_dir = pwd();
+cd([this_dir, filesep(), 'builtin']);
+run('builder.m');
+cd(current_dir);
+pathToAdd = [this_dir, filesep(), 'builtin'];
 addpath(pathToAdd);
 disp(['Do not forget to add addpath(''', pathToAdd, ''')']);
 % =============================================================================

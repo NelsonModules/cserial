@@ -28,8 +28,8 @@ Builtin availables:
     - flowcontrol: 'none', 'hard' or 'soft'.
     - rtscontrol: 'none', 'hard', 'soft', or 'best'.
 
-* [data, nbBytesReceived] = readPort(id, numBytesToRead)
-* writePort(id, data) write date on serial port. data must be uint8 or char.
+* [data, nbBytesReceived] = readPort(id, numBytesToRead) read data from port.
+* writePort(id, data) write data on serial port. data must be uint8 or char.
 * closePort(id) closes an port opened.
 * flushPort(id) flushs desired port.
 * st = getPortConfig(id) returns struct with port informations.

@@ -43,7 +43,11 @@ function main_builder()
 
     // Action
     // =============================================================================
-    exec(toolbox_dir + filesep() + 'builtin' + filesep() + 'builder.sce');
+    builtin_path = toolbox_dir + filesep() + 'builtin' + filesep();
+    current_dir = pwd();
+    cd(builtin_path);
+    exec('builder.sce');
+    cd(current_dir);
     tbx_builder_help(toolbox_dir);
     tbx_build_loader(toolbox_dir);
     tbx_build_cleaner(toolbox_dir);

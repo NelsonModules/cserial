@@ -13,9 +13,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //=============================================================================
-// load C/C++ gateway
-MODULE_NAME = 'cserial';
-run([fileparts(nfilename('fullpath')), '/../builtin/loader.nls']);
+function quitModule()
+    etc_tlbx  = get_absolute_file_path("cserial.quit");
+    etc_tlbx  = getshortpathname(etc_tlbx);
+    root_tlbx = strncpy( etc_tlbx, length(etc_tlbx)-length("\etc\") );
+
+    functionsName = ["openPort";
+        "closePort";
+        "writePort";
+        "readPort";
+        "getPortNames";
+        "flushPort";
+        "getPortConfig"];
+
+    for n = functionsName'
+        libname = strcat(['mexsci', n]);
+        [bOK, ilib] = c_link(libname);
+        if bOK then
+            ulink(ilib);
+        end        
+    end
+endfunction
 //=============================================================================
-clear('MODULE_NAME');
+quitModule();
+clear quitModule;
 //=============================================================================

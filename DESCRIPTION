@@ -1,0 +1,50 @@
+Toolbox: cserial
+
+Title: cserial toolbox
+
+Summary: Serial port C MEX functions
+
+Version: 1.0.0
+
+Author: Allan CORNET (Nelson-numerical-software)
+
+Maintainer: nelson.numerical.computation@gmail.com
+
+Category: Instruments Control
+
+Entity: Nelson-numerical-software
+
+WebSite: https://github.com/NelsonModules/cserial
+
+License: APACHE 2.0
+
+ScilabVersion: >= 6.1
+
+Depends: 
+
+// Creation date
+Date: 2020-06-26
+
+Description: C MEX interface for serial port.
+compatible with software compatible with C MEX API.
+
+Builtin availables:
+getPortNames() returns a cell with available ports.
+
+id = openPort(port, baudrate [, databits [, stopbits, [parity, [flowcontrol, [rtscontrol]]]]])
+supported baud rate: 0, 50, 100, 110, 134, 150, 200, 300, 600, 1200, 1800, 2400, 4800, 9600, 19200, 38400, 115200, or 921600.
+data bits: 5, 6, 7, or 8.
+stop bits: 0 or 1.
+parity: 'none', 'odd' or 'even'.
+flowcontrol: 'none', 'hard' or 'soft'.
+rtscontrol: 'none', 'hard', 'soft', or 'best'.
+
+[data, nbBytesReceived] = readPort(id, numBytesToRead) read data.
+
+writePort(id, data) write data on serial port. data must be uint8 or char.
+
+closePort(id) closes an port opened.
+
+flushPort(id) flushs desired port.
+
+st = getPortConfig(id) returns struct with port informations.

@@ -26,7 +26,7 @@ Date: 2020-06-26
 
 Description: 
  C MEX interface for serial port.
- compatible with software compatible with C MEX API.
+ Compatible with all software supporting C MEX API.
  List of builtin availables
     - getPortNames() returns a cell with available ports.
     - id = openPort(port, baudrate [, databits [, stopbits, [parity, [flowcontrol, [rtscontrol]]]]])
@@ -41,3 +41,4 @@ Description:
     - closePort(id) closes an port opened.
     - flushPort(id) flushs desired port.
     - st = getPortConfig(id) returns struct with port informations.
+ 

@@ -6,15 +6,22 @@ To build:
 On Nelson >= 0.4.6 :
 
 ```
-run('builder.nls')
-run('loader.nls')
-help cserial
+run('builder.nls');
+run('loader.nls');
+doc cserial
 ```
 
-On others tools:
+On Octave or Matlab:
 
 ```
 run('builder.m')
+```
+
+On Scilab 6.1:
+
+```
+exec('builder.sce');
+exec('loader.nls');
 ```
 
 Builtin availables:

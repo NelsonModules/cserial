@@ -30,13 +30,13 @@ function main_builder()
         error(gettext("Scilab 5.3 or more is required."));
     end
 
-    if v(1) < 6 then
-        error(gettext("Scilab 6.0 or more is required."));
+    supported = (v(1) == 6) && (v(2) > 0);
+    if ~supported then
+        error(gettext("Scilab 6.1 or more is required."));
     end
 
     // Check modules_manager module availability
     // =============================================================================
-
     if ~isdef("tbx_build_loader") then
         error(msprintf(gettext("%s module not installed."), "modules_manager"));
     end

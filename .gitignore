@@ -33,4 +33,6 @@ builtin/loader.sce
 unloader.sce
 loader.sce
 cleaner.sce
+jar/
+help/en_US/master_help.xml
 

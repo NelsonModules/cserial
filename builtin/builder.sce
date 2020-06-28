@@ -23,19 +23,25 @@ functionsName = ["openPort";
 "flushPort";
 "getPortConfig"];
 //=============================================================================
+current_include_path = strcat(['-I', pwd(), filesep()]); 
 for n = functionsName'
     libname = strcat(['mexsci', n]);
     fun_table = [n, n, 'cmex'];
     files = [strcat([n, '.c']), 'c_serial.c'];
-    ilib_mex_build(libname, fun_table, files, [], '', '', '', '', '-I.');
+    ilib_mex_build(libname, fun_table, files, [], '', '', current_include_path, '', '');
 end
 //=============================================================================
 deletefile('cleaner.sce');
 deletefile('loader.sce');
 //=============================================================================
 txt = ['mex_path = get_absolute_file_path(''loader.sce'');'];
+ispc = getos() == 'Windows';
 for n = functionsName'
-    libname = strcat(['mexsci', n]);
+    if ispc 
+        libname = strcat(['mexsci', n]);
+    else
+        libname = strcat(['libmexsci', n]);
+    end
     l = 'addinter(mex_path + filesep() + ''' + libname + ''' + getdynlibext(), ''' + libname + ''', ''' + n + ''');'
     txt = [txt; l];
 end

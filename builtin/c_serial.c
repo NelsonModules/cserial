@@ -348,7 +348,7 @@ do{ \
 #ifdef _WIN32
                 case 921600: newio.BaudRate = 921600; break;
 #else
-                case 921600: cfsetospeed( &newio, B921600 ); cfsetispeed( &newio, B921600 ); break;
+                case 921600: cfsetospeed( &newio, 921600 ); cfsetispeed( &newio, 921600 ); break;
 #endif
             }
             

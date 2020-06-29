@@ -1,7 +1,21 @@
 C MEX interface for serial port by implementing c_serial code base: 
 https://github.com/rm5248/CSerial
 
-To build:
+## Install
+
+On Nelson >= 0.4.6 :
+
+```
+nmm('install', 'https://github.com/NelsonModules/cserial.git#master')
+```
+
+On Scilab 6.1:
+
+```
+atomsInstall('cserial')
+```
+
+## Build
 
 On Nelson >= 0.4.6 :
 
@@ -11,11 +25,6 @@ run('loader.nls');
 doc cserial
 ```
 
-On Octave or Matlab:
-
-```
-run('builder.m')
-```
 
 On Scilab 6.1:
 
@@ -23,6 +32,13 @@ On Scilab 6.1:
 exec('builder.sce');
 exec('loader.nls');
 ```
+
+On Octave or Matlab:
+
+```
+run('builder.m')
+```
+
 
 Builtin availables:
 

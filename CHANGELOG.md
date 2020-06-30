@@ -1,4 +1,8 @@
-# 1.0.0 (2020-06-XX)
+# 1.X.X
+
+* add appveyor CI badge.
+
+# 1.0.0 (2020-06-29)
 
 * initial version
 * code "adapted" to support for Scilab 6.1.

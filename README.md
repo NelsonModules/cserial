@@ -1,3 +1,7 @@
+
+[![Build status](https://ci.appveyor.com/api/projects/status/github/Nelsonmodules/cserial?svg=true)](https://ci.appveyor.com/project/Nelsonmodules/cserial)
+
+
 C MEX interface for serial port by implementing c_serial code base: 
 https://github.com/rm5248/CSerial
 
@@ -63,4 +67,5 @@ Example: https://github.com/NelsonModules/cserial/blob/master/example/example.m
 This toolboxe is an good example to show how it is easy to use existing C MEX builtin with Nelson.
 This toolbox works on Nelson and all others tools fully compatible with C MEX API.
 
-Allan CORNET - 2020 
+Allan CORNET (nelson.numerical.computation@gmail.com) - 2020
+
